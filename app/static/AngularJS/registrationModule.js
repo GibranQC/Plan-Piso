@@ -16,6 +16,22 @@ var registrationModule = angular.module("registrationModule", ["ngRoute", "Local
         // }
             controller: 'loginController'
         });
+
+        $routeProvider.when('/home', {
+            templateUrl: 'AngularJS/Templates/home.html', //example 1
+        //     params: {
+        //     mostrar: true
+        // }
+            controller: 'homeController'
+        });
+
+        $routeProvider.when('/unidadesNuevas', {
+            templateUrl: 'AngularJS/Templates/unidadesNuevas.html', //example 1
+        //     params: {
+        //     mostrar: true
+        // }
+            controller: 'unidadesNuevasController'
+        });
         $routeProvider.otherwise({redirectTo:'/'});
 
         $locationProvider.html5Mode({

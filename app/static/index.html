@@ -17,12 +17,12 @@
 
 </head>
 
-<body ng-app="registrationModule">
-  <div id="container" class="effect aside-float aside-bright mainnav-lg">
+<body ng-app="registrationModule" ng-controller="mainController" ng-init="init()">
+  <div id="container" class="effect aside-float aside-bright mainnav-sm">
         
         <!--NAVBAR-->
         <!--===================================================-->
-        <header id="navbar">
+        <header id="navbar" ng-show="mostrarMenu == 1">
             <div id="navbar-container" class="boxed">
 
                 <!--Brand logo & name-->
@@ -48,7 +48,7 @@
                         <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                         <li class="tgl-menu-btn">
                             <a class="mainnav-toggle" href="#">
-                                <i class="demo-pli-view-list"></i>
+                                <i class="demo-pli-view-list">&nbsp; Bienvenido a Plan Piso</i>
                             </a>
                         </li>
                         <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
@@ -59,13 +59,13 @@
 
                         <!--Language selector-->
                         <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-                        <li class="dropdown">
+                        <!-- <li class="dropdown">
                             <a id="demo-lang-switch" class="lang-selector dropdown-toggle" href="#" data-toggle="dropdown">
                                 <span class="lang-selected">
                                     <img class="lang-flag" src="img/flags/spain.png" alt="Español">
                                 </span>
                             </a>
-                        </li>
+                        </li> -->
                         <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                         <!--End language selector-->
 
@@ -79,7 +79,7 @@
                                     <!--<img class="img-circle img-user media-object" src="img/profile-photos/1.png" alt="Profile Picture">-->
                                     <i class="demo-pli-male ic-user"></i>
                                 </span>
-                                <div class="username hidden-xs">Aaron Chavez</div>
+                                <div class="username hidden-xs">{{datosUsuario.nombre}}</div>
                             </a>
 
 
@@ -87,7 +87,7 @@
                                 <!-- Dropdown footer -->
                                 <div class="pad-all text-right">
                                     <a href="pages-login.html" class="btn btn-primary">
-                                        <i class="demo-pli-unlock"></i> Logout
+                                        <i class="demo-pli-unlock"></i> Salir
                                     </a>
                                 </div>
                             </div>
@@ -120,7 +120,7 @@
             <!--===================================================-->            
             <!--MAIN NAVIGATION-->
             <!--===================================================-->
-            <nav id="mainnav-container">
+            <nav id="mainnav-container" ng-show="mostrarMenu == 1">
                 <div id="mainnav">
 
                     <!--Menu-->
@@ -140,22 +140,30 @@
                                         <a href="#profile-nav" class="box-block" data-toggle="collapse" aria-expanded="false">
                                             <span class="pull-right dropdown-toggle">
                                             </span>
-                                            <p class="mnp-name">Aaron Chavez</p>
-                                            <span class="mnp-desc">aaron.cha@themeon.net</span>
+                                            <p class="mnp-name">{{datosUsuario.nombre}}</p>
+                                            <span class="mnp-desc">{{datosUsuario.email}}</span>
                                         </a>
                                     </div>
                                 </div>
-                                <ul id="mainnav-menu" class="list-group">
+                                <ul id="mainnav-menu" class="list-group" ng-show="mostrarMenuLateral == 1">
                         
                                     <!--Category name-->
                                     <li class="list-header">Navegación</li>
                         
                                     <!--Menu list item-->
                                     <li>
-                                        <a href="index.html">
-                                            <i class="demo-psi-home"></i>
+                                        <a href="/home">
+                                            <i class="glyphicon glyphicon-home"></i>
                                             <span class="menu-title">
-                                                <strong>Control de Depositos</strong>
+                                                <strong>Home</strong>
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/unidadesNuevas">
+                                            <i class="glyphicon glyphicon-alert"></i>
+                                            <span class="menu-title">
+                                                <strong>Unidades Nuevas</strong>
                                             </span>
                                         </a>
                                     </li>
@@ -163,18 +171,36 @@
                                     <!--Menu list item-->
                                     <li>
                                         <a href="#">
-                                            <i class="demo-psi-split-vertical-2"></i>
+                                            <i class="glyphicon glyphicon-random"></i>
                                             <span class="menu-title">
-                                                <strong>Amarre de Caja</strong>
+                                                <strong>Esquemas</strong>
                                             </span>
                                             
                                         </a>
                                     </li>
                                      <li>
                                         <a href="#">
-                                            <i class="demo-psi-split-vertical-2"></i>
+                                            <i class="glyphicon glyphicon-usd"></i>
                                             <span class="menu-title">
-                                                <strong>Conciliación Contable</strong>
+                                                <strong>Plan Piso</strong>
+                                            </span>
+                                            
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="glyphicon glyphicon-usd"></i>
+                                            <span class="menu-title">
+                                                <strong>Pagos</strong>
+                                            </span>
+                                            
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="glyphicon glyphicon-usd"></i>
+                                            <span class="menu-title">
+                                                <strong>Conciliación</strong>
                                             </span>
                                             
                                         </a>
@@ -225,8 +251,14 @@
     <!--librerias de componenetes-->
     <script src="AngularJS/alertFactory.js"></script>
     <!--Controllers-->
+    <script src="AngularJS/Main/mainControlller.js"></script>
     <script src="AngularJS/login/loginController.js"></script>
     <script src="AngularJS/login/loginRepository.js"></script>
+    <script src="AngularJS/Home/homeController.js"></script>
+    <script src="AngularJS/Home/homeRepository.js"></script>
+    <script src="AngularJS/Filtros/filtroController.js"></script>
+    <script src="AngularJS/Filtros/filtroRepository.js"></script>
+    <script src="AngularJS/UnidadesNuevas/unidadesNuevasController.js"></script>
 </body>
 
 </html>

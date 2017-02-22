@@ -1,0 +1,33 @@
+<div ng-init="init()">
+    <div class="panel col-md-12" style="width: 100%; height: 700px">
+        <form>
+            <div class="panel-body">
+                <div class="row">
+                    <br/>               
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <div class="row col-md-12">
+                    	<label class="col-md-4 col-md-offset-4">Para poder iniciar Plan Piso seleccione una empresa disponible</label>
+                    	
+                    </div>
+                    <br/>
+                    <br/>
+                    <div class="form-group col-md-4 col-md-offset-4">
+                        <label class="form-label text-main">Seleccionar Empresa:</label>
+                        <select class="form-control" ng-model="filtros.idEmpresa" ng-options="empresa.idEmpresa as empresa.nombre for empresa in empresas" name="txtTipoContrato" ng-change="" ng-disabled="">
+                            <option value="">Seleccioné Empresa</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1" style="margin-top: 23px">
+                        <button class="btn btn-primary pull-right" ng-click="SeleccionarEmpresa(filtros.idEmpresa,empresas[filtros.idEmpresa].nombre)"><i class="ti-search"></i> Buscar</button>
+                    </div>
+                </div>
+        </form>
+        </div>
+    </div>

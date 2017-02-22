@@ -1,31 +1,57 @@
 registrationModule.controller('loginController', function($scope, $rootScope, $location, loginRepository, alertFactory, localStorageService) {
     $rootScope.datosUsuario = '';
-    $rootScope.menuTimbrado = false;
-    $rootScope.menuBusqueda = false;
+ 
     $scope.init = function() {
-        $rootScope.mostrarMenu = false;
+        $rootScope.mostrarMenu = 0;
+        $rootScope.mostrarMenuLateral = 0;
+        // localStorageService.set('glbInterestEmpresa',null) ;
+        // localStorageService.set('glbSchemeFinanciera',null) ;
+        // localStorageService.set('glbNewUnitsEmpresa',null) ;
+        // localStorageService.clearAll('userData');
+        // localStorageService.clearAll('lgnUser');
+        // if (!($('#lgnUser').val().indexOf('[') > -1)) {
+        //         localStorageService.set('lgnUser', $('#lgnUser').val());
+        //         $scope.getEmpleado();
+        //         location.href = '/newUnits';
+        //     } else {
+        //         if (($('#lgnUser').val().indexOf('[') > -1) && !localStorageService.get('lgnUser')) {
+        //             if (getParameterByName('employee') != '') {
+        //                 $rootScope.currentEmployee = getParameterByName('employee');
+        //                 location.href = '/newUnits';
+        //             } else {
+        //                 alert('Inicie sesión desde panel de aplicaciones o desde el login.');
+        //             }
+
+        //         }
+        //     }
+        // $rootScope.currentEmployee = localStorageService.get('lgnUser');
     }
-    $scope.permisos = function(usuario, contrasena) {
-        loginRepository.getPermisos(usuario, contrasena).then(function(result) {
-            $rootScope.datosUsuario = result.data;
-            if ($rootScope.datosUsuario.length > 0) {
-                if ($rootScope.datosUsuario[0].idPerfil == 1) {
-                    $rootScope.menuTimbrado = true;
-                    $rootScope.menuBusqueda = true;
-                    $location.url('/timbrado' + $rootScope.datosUsuario[0].idPerfil + '&'+ $rootScope.datosUsuario[0].idUsuario);
-                } else if ($rootScope.datosUsuario[0].idPerfil == 2) {
-                    $rootScope.menuTimbrado = true;
-                    $location.url('/timbrado' + $rootScope.datosUsuario[0].idPerfil+ '&'+ $rootScope.datosUsuario[0].idUsuario );
-                } else if ($rootScope.datosUsuario[0].idPerfil == 3) {
-                    $rootScope.menuBusqueda = true;
-                    $location.url('/busqueda' + $rootScope.datosUsuario[0].idPerfil + '&'+ $rootScope.datosUsuario[0].idUsuario);
-                }
-            }else{
-            	alertFactory.error('El usuario y/o contraseña son incorrecta(s)')
+    // Función para traer el nombre del usuario
+        $scope.getEmpleado = function(){
+            loginRepository.getEmpleado($rootScope.currentEmployee).then(function (result) {
+            if (result.data.length > 0) {
+                $scope.datosUsuario = result.data;
+                localStorageService.set('userData', $scope.datosUsuario);
+              } else {
+                alertFactory.info("Datos Incorrectos");
             }
-            //$location.url('/busqueda' + $scope.datosUsuario[0].idPerfil);
-            // console.log(result)
-            // location.href = '/busqueda'
+        }, function (error) {
+            alertFactory.error("Datos no correctos");
+        });
+    };
+        // Función para iniciar sesión sin control de aplicaciones
+        $scope.login = function(usuario, password){
+        $scope.promise = loginRepository.getValidaUsuario(usuario, password).then(function (result) {
+            if (result.data.length > 0) {
+                //alertFactory.success("Bienvenido a Plan Piso"+ result.data[0].usuario);
+                $rootScope.datosUsuario = result.data[0];
+                localStorageService.clearAll('lgnUser');
+                localStorageService.set('userData', $rootScope.datosUsuario);
+                //$rootScope.mostrarMenu = 1;
+                location.href = '/home';
+            } else {
+                //alertFactory.info("Datos Incorrectos");
+            }
         });
     }
 });

@@ -21,19 +21,40 @@ var Login = function(conf) {
 };
 
 
-Login.prototype.get_permisos = function(req, res, next) {
-
+// SE valida que el usuario sea correcto
+Login.prototype.get_validaUsuario = function(req, res, next) {
+    //Con req.query se obtienen los parametros de la url
+    //Ejemplo: ?p1=a&p2=b
+    //Retorna {p1:'a',p2:'b'}
+    //Objeto que envía los parámetros
+    //var params = [];
+    //Referencia a la clase para callback
     var self = this;
-
-    var params = [{ name: 'User', value: req.query.usuario, type: self.model.types.STRING },
-                  { name: 'pass', value: req.query.contrasena, type: self.model.types.STRING }];
-
-    this.model.query('SEL_LOGIN_SP', params, function(error, result) {
+    //asignación de valores mediante parámetros del request
+    var params = [{ name: 'usuario', value: req.query.usuario, type: self.model.types.STRING },
+        { name: 'password', value: req.query.password, type: self.model.types.STRING }
+    ];
+    this.model.query('SEL_VALIDA_USUARIO_SP', params, function(error, result) {
         self.view.expositor(res, {
             error: error,
             result: result
         });
     });
 };
+
+Login.prototype.get_getEmpleado = function(req, res, next) {
+
+    var self = this;
+    //asignación de valores mediante parámetros del request
+    var params = [{ name: 'idEmpleado', value: req.query.idEmpleado, type: self.model.types.INT }];
+
+    this.model.query('SEL_EMPLEADO_SP', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 
 module.exports = Login;

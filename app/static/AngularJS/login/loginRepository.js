@@ -3,20 +3,27 @@ var loginURL = global_settings.urlCORS + 'api/login/';
 
 registrationModule.factory('loginRepository', function($http) {
     return {
-        getPermisos: function(usuario, contrasena) {
+        getValidaUsuario: function(usuario,password) {
             return $http({
-                url: loginURL + 'permisos/',
+                url: loginURL + 'ValidaUsuario/',
                 method: "GET",
-                params: {
-                    usuario: usuario,
-                    contrasena: contrasena
-                },
+                 params: {usuario: usuario,
+                         password:password},
                 headers: {
-                    'Content-Type': 'application/json'
+                'Content-Type': 'application/json'
                 }
-
             });
-        }
+        },
+        getEmpleado: function(idEmpleado) {
+            return $http({
+                url: loginURL + 'getEmpleado/',
+                method: "GET",
+                 params: {idEmpleado: idEmpleado},
+                headers: {
+                'Content-Type': 'application/json'
+                }
+            });
+        } 
     };
 
 });
