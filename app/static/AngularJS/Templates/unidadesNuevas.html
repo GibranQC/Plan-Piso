@@ -5,23 +5,34 @@
             <br/>
             <br/>
             <h2>Empresa - {{datosEmpresa[0].nombreEmpresa}}</h2>
-            <ol class="breadcrumb">
-                <li class="active">
-                    <strong></strong>
-                </li>
-                <li class="active" ng-show="getSucursal.show">
-                    <strong>{{}}</strong>
-                </li>
-                <li class="active" ng-show="getInterest.show">
-                    <strong>Todas las unidades</strong>
-                </li>
-            </ol>
         </div>
         <br/>
         <br/>
         <br/>
-        <br/>
-        <br/>
+        <div class="col-md-12">
+            <br/>
+            <br/>
+            <div class="form-group col-md-4">
+                <label class="form-label text-main">Seleccionar Sucursal:</label>
+                <select class="form-control" ng-model="filtros.idSucursal" ng-options="sucursales.idSucursal as sucursales.nombreSucursal for sucursales in sucursales" name="txtTipoContrato" ng-change="" ng-disabled="">
+                    <option value="">Seleccioné Sucursal</option>
+                </select>
+            </div>
+            <div class="col-md-1" style="margin-top: 23px">
+                <button class="btn btn-primary pull-right" ng-click="getUnidadesNuevasEmpresa(filtros.idSucursal)"><i class="ti-search"></i> Buscar</button>
+            </div>
+            <div class="panel media middle col-md-2 col-md-offset-5">
+                <div class="media-left">
+                    <span class="icon-wrap icon-wrap-sm icon-circle bg-warning">
+					<i class="ti-car icon-2x"></i>
+				</span>
+                </div>
+                <div class="media-body">
+                    <p class="text-2x mar-no text-semibold">{{totalUnidades}}</p>
+                    <p class="text-muted mar-no">Total Unidades</p>
+                </div>
+            </div>
+        </div>
         <div class="col-md-12">
             <div class="text-main">
                 <h4>Unidades sin esquema</h4>
@@ -53,7 +64,7 @@
                         <td ng-show="editDate">
                             <div class="form-group pull-left" id="calendar">
                                 <div class="input-group date">
-                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                     <input type="text" class="form-control" id="fInicio" ng-model="intereses.fechaCalculo" placeholder="dd/mm/yyyy">
                                 </div>
                             </div>
@@ -150,7 +161,6 @@
                     <br/>
                 </div>
                 <br/>
-
                 <div class="col-md-12" ng-show="terminarAsignacionEsquema == 1">
                     <div class="text-main">
                         <h4>Resumen de unidades</h4>
@@ -160,16 +170,16 @@
                             <tr>
                                 <th>VIN</th>
                                 <th>Financiera</th>
-                                <th>Nombre Esquema</th>           
+                                <th>Nombre Esquema</th>
                                 <th>Fecha Aplicación</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr ng-repeat="unidad in listUnidadesAsignacion">
-                                <td  ng-class="setClass(unidad.status)">{{unidad.vehNumserie}}</td>
-                                    <td>{{nombreFinanciera}}</td>
-                                    <td>{{nombreEsquema}}</td> 
-                                    <td>{{fechaHoy | date:'dd-MM-yyyy'}}</td>
+                                <td ng-class="setClass(unidad.status)">{{unidad.vehNumserie}}</td>
+                                <td>{{nombreFinanciera}}</td>
+                                <td>{{nombreEsquema}}</td>
+                                <td>{{fechaHoy | date:'dd-MM-yyyy'}}</td>
                             </tr>
                         </tbody>
                     </table>

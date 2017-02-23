@@ -7,32 +7,68 @@ registrationModule.controller('unidadesNuevasController', function($scope, $root
     $scope.listUnidadesAsignacion = []
     $scope.terminarAsignacionEsquema = 0;
     $scope.fechaHoy = new Date();
-    $scope.nombreFinanciera ='';
+    $scope.nombreFinanciera = '';
 
     $scope.init = function() {
+        console.log($rootScope.datosEmpresa[0].idEmpresa)
         $rootScope.mostrarMenu = 1;
         $rootScope.mostrarMenuLateral = 1;
-        $scope.getUnidadesNuevasSinEsquema();
+        $scope.getSucursales($rootScope.datosEmpresa[0].idEmpresa)
+            //$scope.getUnidadesNuevasEmpresa($rootScope.datosEmpresa[0].idEmpresa);
     }
 
-    $scope.getUnidadesNuevasSinEsquema = function() {
+
+    $scope.getSucursales = function(idEmpresa) {
+        $scope.promise = filtroRepository.getSucursales(idEmpresa).then(function(result) {
+            if (result.data.length > 0) {
+                $scope.sucursales = result.data;
+                console.log($scope.sucursales)
+            } else {
+                //alertFactory.info("No se encontraron Empresas");
+            }
+        });
+    }
+
+    $scope.getUnidadesNuevasEmpresa = function(idEmpresa) {
         $('.tabla-punteo').DataTable().destroy();
         $scope.nombreTabla = 'tabla-punteo';
         $scope.nombreModal = 'loadModal';
         $scope.nuevasUnidades = [];
         $('#loadModal').modal('show');
-        $scope.promise = filtroRepository.getUnidadesNuevasSinEsquema().then(function(result) {
+        $scope.promise = filtroRepository.getUnidadesNuevasEmpresa(idEmpresa).then(function(result) {
             if (result.data.length > 0) {
                 $scope.nuevasUnidades = result.data;
-                $scope.tabla($scope.nombreTabla,$scope.nombreModal);
+                $scope.totalUnidades = result.data.length;
+                $scope.tabla($scope.nombreTabla, $scope.nombreModal);
             }
         });
     }
 
-    $scope.tabla = function(tabla,modal) {
+    $scope.getUnidadesNuevasEmpresa = function(idSucursal) {
+        $scope.idSucursal = idSucursal;
+        console.log($scope.idSucursal + ' ')
+        $('.tabla-punteo').DataTable().destroy();
+        $scope.nombreTabla = 'tabla-punteo';
+        $scope.nombreModal = 'loadModal';
+        $scope.nuevasUnidades = [];
+        $('#loadModal').modal('show');
+        $scope.promise = filtroRepository.getNuevasUnidadesSucursal($rootScope.datosEmpresa[0].idEmpresa, $scope.idSucursal).then(function(result) {
+            if (result.data.length > 0) {
+                $scope.nuevasUnidades = result.data;
+                $scope.totalUnidades = result.data.length;
+                $scope.tabla($scope.nombreTabla, $scope.nombreModal);
+            } else {
+                //alertFactory.info("No se encontraron unidads");
+                $('#loadModal').modal('hide');
+            }
+        });
+    }
+
+
+    $scope.tabla = function(tabla, modal) {
         setTimeout(function() {
-            $('#'+modal).modal('hide');
-            $('.'+tabla).dataTable({
+            $('#' + modal).modal('hide');
+            $('.' + tabla).dataTable({
                 destroy: true,
                 "responsive": true,
                 "language": {
@@ -49,14 +85,14 @@ registrationModule.controller('unidadesNuevasController', function($scope, $root
     };
 
     $scope.AsignarEsquema = function(object) {
-    	$('.tabla-financieras').DataTable().destroy();
-		$('.tabla-resumenUnidades').DataTable().destroy();
-    	$scope.listUnidadesAsignacion = [];
-    	$scope.lstEsquemasFinanciera = [];
-    	$scope.getFinanciera();
-    	$('#asignacionEsquema').modal('show');
-    	$scope.terminarAsignacionEsquema = 0;
-        
+        $('.tabla-financieras').DataTable().destroy();
+        $('.tabla-resumenUnidades').DataTable().destroy();
+        $scope.listUnidadesAsignacion = [];
+        $scope.lstEsquemasFinanciera = [];
+        $scope.getFinanciera();
+        $('#asignacionEsquema').modal('show');
+        $scope.terminarAsignacionEsquema = 0;
+
         angular.forEach(object, function(value, key) {
             if (value.check == true) {
                 $scope.listUnidadesAsignacion.push({
@@ -77,50 +113,62 @@ registrationModule.controller('unidadesNuevasController', function($scope, $root
     }
 
     $scope.getFinanciera = function() {
-    	$scope.financiera = [];
+        $scope.financiera = [];
         $scope.promise = filtroRepository.getFinanciera().then(function(result) {
-                if (result.data.length > 0) {
-                    $scope.financiera = result.data;
-                }
-            })
-        };
+            if (result.data.length > 0) {
+                $scope.financiera = result.data;
+            }
+        })
+    };
 
-   	$scope.EsquemaPorFinanciera = function(idFinanciera,nombreFinanciera){
-   		$('.tabla-financieras').DataTable().destroy();
-   		$scope.lstEsquemasFinanciera=[];	
-   		$scope.nombreTabla = 'tabla-financieras';
-   		$scope.nombreModal = 'nada';
-   		$scope.nombreFinanciera = nombreFinanciera;
-   		filtroRepository.getEsquemaFinanciera(idFinanciera).then(function(result) {
-   			if(result.data.length > 0){
-   				$scope.lstEsquemasFinanciera = result.data;
-   				$scope.tabla($scope.nombreTabla,$scope.nombreModal);
-   			}
-   		});
-   	}
+    $scope.EsquemaPorFinanciera = function(idFinanciera, nombreFinanciera) {
+        $('.tabla-financieras').DataTable().destroy();
+        $scope.lstEsquemasFinanciera = [];
+        $scope.nombreTabla = 'tabla-financieras';
+        $scope.nombreModal = 'nada';
+        $scope.nombreFinanciera = nombreFinanciera;
+        filtroRepository.getEsquemaFinanciera(idFinanciera).then(function(result) {
+            if (result.data.length > 0) {
+                $scope.lstEsquemasFinanciera = result.data;
+                $scope.tabla($scope.nombreTabla, $scope.nombreModal);
+            }
+        });
+    }
 
-   	$scope.continuarCambio = function(object){
-   		$('.tabla-resumenUnidades').DataTable().destroy();
-   		$scope.nombreTabla = 'tabla-resumenUnidades';
-   		$scope.nombreModal = 'nada';
-   		$scope.terminarAsignacionEsquema = 1;
-   		angular.forEach(object, function(value, key) {
+    $scope.continuarCambio = function(object) {
+        $('.tabla-resumenUnidades').DataTable().destroy();
+        $scope.nombreTabla = 'tabla-resumenUnidades';
+        $scope.nombreModal = 'nada';
+        $scope.terminarAsignacionEsquema = 1;
+        angular.forEach(object, function(value, key) {
             if (value.check == true) {
                 $scope.nombreEsquema = value.nombre;
                 $scope.idEsquema = value.idEsquema;
             }
         });
-   		$scope.tabla($scope.nombreTabla,$scope.nombreModal);
-   	}
+        $scope.tabla($scope.nombreTabla, $scope.nombreModal);
+    }
 
-   	$scope.regresarEsquema = function(){
-   		$scope.terminarAsignacionEsquema = 0;
-   	}
+    $scope.regresarEsquema = function() {
+        $scope.terminarAsignacionEsquema = 0;
+    }
 
-
-
-
-
+    $scope.getStringTasaFija = function(value) {
+        if (value) return "FECHA";
+        else return "RANGO";
+    };
+    
+    $scope.calendario = function() {
+        $('#calendar .input-group.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: true,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true,
+            todayHighlight: true,
+            format: "dd/mm/yyyy"
+        });
+    }
 
 });
 // 		idUnidad

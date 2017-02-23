@@ -9,10 +9,41 @@ registrationModule.factory('filtroRepository', function($http) {
                 method: "GET"
             });
         },
-        getUnidadesNuevasSinEsquema: function() {
+        getSucursales: function (idEmpresa) {
             return $http({
-                url: filtrosURL + 'unidadesNuevasSinEsquema/',
-                method: "GET"
+                url: filtrosURL + 'sucursales/',
+                method: "GET",
+                params: {
+                    idEmpresa: idEmpresa
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        },
+        getUnidadesNuevasEmpresa: function(idEmpresa) {
+            return $http({
+                url: filtrosURL + 'unidadesNuevasEmpresa/',
+                method: "GET",
+                params: {
+                    idEmpresa: idEmpresa
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        },
+        getNuevasUnidadesSucursal: function(idEmpresa, idSucursal) {
+            return $http({
+                url: filtrosURL + 'nuevasUnidadesSucursal/',
+                method: "GET",
+                params: {
+                    idEmpresa: idEmpresa,
+                    idSucursal: idSucursal
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
         },
         getFinanciera: function () {
