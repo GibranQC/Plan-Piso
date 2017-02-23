@@ -1,4 +1,189 @@
 <div ng-init="init()">
-	<label>Unidades Nuevas</label>
-	{{datosEmpresa}}
+    <div class="panel col-md-12" style="width: 100%">
+        <div class="col-lg-10">
+            <br/>
+            <br/>
+            <br/>
+            <h2>Empresa - {{datosEmpresa[0].nombreEmpresa}}</h2>
+            <ol class="breadcrumb">
+                <li class="active">
+                    <strong></strong>
+                </li>
+                <li class="active" ng-show="getSucursal.show">
+                    <strong>{{}}</strong>
+                </li>
+                <li class="active" ng-show="getInterest.show">
+                    <strong>Todas las unidades</strong>
+                </li>
+            </ol>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <div class="col-md-12">
+            <div class="text-main">
+                <h4>Unidades sin esquema</h4>
+            </div>
+            <table class="table table-striped table-bordered tabla-punteo" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>VIN</th>
+                        <th>Marca</th>
+                        <th>Descripción Modelo</th>
+                        <th>Modelo</th>
+                        <th>Precio compra</th>
+                        <th>Precio venta</th>
+                        <th>Fecha Cálculo</th>
+                        <th style="display:none;">Fecha Calculo</th>
+                        <th>Editar</th>
+                        <th>Seleccionar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="intereses in nuevasUnidades">
+                        <td ng-model="interes.idnum">{{intereses.vehNumserie}}</td>
+                        <td>{{intereses.marca}}</td>
+                        <td>{{intereses.descModelo}}</td>
+                        <td>{{intereses.modelo}}</td>
+                        <td>{{intereses.valorInventario | currency}}</td>
+                        <td>{{intereses.precioLista | currency}}</td>
+                        <td ng-hide="editDate">{{intereses.fechaCalculo | date:'dd-MM-yyyy'}} &nbsp;</td>
+                        <td ng-show="editDate">
+                            <div class="form-group pull-left" id="calendar">
+                                <div class="input-group date">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" id="fInicio" ng-model="intereses.fechaCalculo" placeholder="dd/mm/yyyy">
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn .btn-default" ng-hide="editDate" ng-click="editDate = true; calendario();">
+                                <span class="glyphicon glyphicon-calendar"> </span>
+                            </button>
+                            <button class="btn .btn-default" ng-show="editDate" ng-click="saveCalcDate(intereses); editDate = false">
+                                <span class="glyphicon glyphicon-ok"> </span>
+                            </button>
+                        </td>
+                        <td style="text-align: center;">
+                            <input type="checkbox" ng-model="intereses.check" ng-checked="{{intereses.check}}">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br/>
+            <br/>
+        </div>
+        <div class="col-md-12">
+            <div class="col-md-2 col-md-offset-10" style="text-align: right;">
+                <button class="btn btn-warning" ng-click="AsignarEsquema(nuevasUnidades)">Asignar esquema</button>
+            </div>
+        </div>
+        <div class="row">
+            <br/>
+            <br/>
+        </div>
+        <br/>
+        <br/>
+    </div>
+</div>
+<div id="loadModal" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="margin-top: -200px;">
+        <div class="sk-folding-cube">
+            <div class="sk-cube1 sk-cube"></div>
+            <div class="sk-cube2 sk-cube"></div>
+            <div class="sk-cube4 sk-cube"></div>
+            <div class="sk-cube3 sk-cube"></div>
+        </div>
+        <div style="color:white;margin-left: 30%; margin-top:10px">{{message}}</div>
+    </div>
+</div>
+<div class="modal fade" id="asignacionEsquema" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!--Modal header-->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="pci-cross pci-circle"></i></button>
+                <h4 class="modal-title">Asignación de esquema</h4>
+            </div>
+            <!--Modal body-->
+            <div class="modal-body">
+                <div class="row col-md-12" ng-show="terminarAsignacionEsquema == 0">
+                    <div class="col-md-5">
+                        <label class="form-label text-main">Seleccionar Financiera:</label>
+                        <select class="form-control" ng-model="filtros.idFinanciera" ng-options="financiera.idFinanciera as financiera.nombre for financiera in financiera" name="txtTipoContrato" ng-change="" ng-disabled="">
+                            <option value="">Seleccioné Financiera</option>
+                        </select>
+                    </div>&nbsp;&nbsp;&nbsp;
+                    <div class="col-md-2" style="margin-top: 23px">
+                        <button class="btn btn-primary pull-right" ng-click="EsquemaPorFinanciera(filtros.idFinanciera,financiera[filtros.idFinanciera].nombre)"><i class="ti-search"></i> Buscar</button>
+                    </div>
+                </div>
+                <div class="col-md-12" ng-show="terminarAsignacionEsquema == 0">
+                    <div class="text-main">
+                        <h4>Esquemas</h4>
+                    </div>
+                    <table class="table table-striped table-bordered tabla-financieras" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Nombre esquema</th>
+                                <th>Días gracia</th>
+                                <th>Plazo</th>
+                                <th>Tipo</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="esquema in lstEsquemasFinanciera">
+                                <td>{{esquema.nombre}}</td>
+                                <td>{{esquema.diasGracia}} Días</td>
+                                <td>{{esquema.plazo}} Días</td>
+                                <td>{{getStringTasaFija(esquema.esFijo)}}</td>
+                                <td style="text-align: center;">
+                                    <input type="checkbox" ng-model="esquema.check" ng-checked="{{esquema.check}}">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br/>
+                    <br/>
+                </div>
+                <br/>
+
+                <div class="col-md-12" ng-show="terminarAsignacionEsquema == 1">
+                    <div class="text-main">
+                        <h4>Resumen de unidades</h4>
+                    </div>
+                    <table class="table table-striped table-bordered tabla-resumenUnidades" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>VIN</th>
+                                <th>Financiera</th>
+                                <th>Nombre Esquema</th>           
+                                <th>Fecha Aplicación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="unidad in listUnidadesAsignacion">
+                                <td  ng-class="setClass(unidad.status)">{{unidad.vehNumserie}}</td>
+                                    <td>{{nombreFinanciera}}</td>
+                                    <td>{{nombreEsquema}}</td> 
+                                    <td>{{fechaHoy | date:'dd-MM-yyyy'}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br/>
+                    <br/>
+                </div>
+            </div>
+            <!--Modal footer-->
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-default" type="button">Cerrar</button>
+                <button class="btn btn-primary" ng-click="regresarEsquema()" ng-show="terminarAsignacionEsquema == 1">Regresar</button>
+                <button class="btn btn-warning" ng-click="terminarAsignacion()" ng-show="terminarAsignacionEsquema == 1">Terminar</button>
+                <button class="btn btn-primary" ng-click="continuarCambio(lstEsquemasFinanciera)" ng-show="terminarAsignacionEsquema == 0">Continuar</button>
+            </div>
+        </div>
+    </div>
 </div>
