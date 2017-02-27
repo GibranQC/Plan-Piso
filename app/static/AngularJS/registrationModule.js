@@ -5,34 +5,59 @@
 // -- Modificó: 
 // -- Fecha: 
 // -- =============================================
-var registrationModule = angular.module("registrationModule", ["ngRoute", "cgBusy","LocalStorageModule"])
+var registrationModule = angular.module("registrationModule", ["ngRoute", "cgBusy", "LocalStorageModule"])
     .config(function($routeProvider, $locationProvider) {
 
         /*cheange the routes*/
         $routeProvider.when('/', {
             templateUrl: 'AngularJS/Pages/login/login.html', //example 1
-        //     params: {
-        //     mostrar: true
-        // }
+            //     params: {
+            //     mostrar: true
+            // }
             controller: 'loginController'
         });
 
         $routeProvider.when('/home', {
             templateUrl: 'AngularJS/Pages/Home/home.html', //example 1
-        //     params: {
-        //     mostrar: true
-        // }
+            //     params: {
+            //     mostrar: true
+            // }
             controller: 'homeController'
         });
 
         $routeProvider.when('/unidadesNuevas', {
             templateUrl: 'AngularJS/Pages/unidadesNuevas/unidadesNuevas.html', //example 1
-        //     params: {
-        //     mostrar: true
-        // }
+            //     params: {
+            //     mostrar: true
+            // }
             controller: 'unidadesNuevasController'
         });
-        $routeProvider.otherwise({redirectTo:'/'});
+
+        $routeProvider.when('/conciliacion', {
+            templateUrl: 'AngularJS/Pages/conciliacion/conciliacion.html', //example 1        
+            controller: 'unidadesNuevasController'
+        });
+
+
+        $routeProvider.when('/esquema', {
+            templateUrl: 'AngularJS/Pages/esquema/esquema.html', //example 1        
+            controller: 'unidadesNuevasController'
+        });
+
+
+        $routeProvider.when('/interes', {
+            templateUrl: 'AngularJS/Pages/interes/interes.html', //example 1        
+            controller: 'unidadesNuevasController'
+        });
+
+
+        $routeProvider.when('/pago', {
+            templateUrl: 'AngularJS/Pages/pago/pago.html', //example 1        
+            controller: 'unidadesNuevasController'
+        });
+
+
+        $routeProvider.otherwise({ redirectTo: '/' });
 
         $locationProvider.html5Mode({
             enabled: true,
