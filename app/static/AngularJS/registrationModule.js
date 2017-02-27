@@ -10,7 +10,7 @@ var registrationModule = angular.module("registrationModule", ["ngRoute", "cgBus
 
         /*cheange the routes*/
         $routeProvider.when('/', {
-            templateUrl: 'AngularJS/Templates/login.html', //example 1
+            templateUrl: 'AngularJS/Pages/login/login.html', //example 1
         //     params: {
         //     mostrar: true
         // }
@@ -18,7 +18,7 @@ var registrationModule = angular.module("registrationModule", ["ngRoute", "cgBus
         });
 
         $routeProvider.when('/home', {
-            templateUrl: 'AngularJS/Templates/home.html', //example 1
+            templateUrl: 'AngularJS/Pages/Home/home.html', //example 1
         //     params: {
         //     mostrar: true
         // }
@@ -26,7 +26,7 @@ var registrationModule = angular.module("registrationModule", ["ngRoute", "cgBus
         });
 
         $routeProvider.when('/unidadesNuevas', {
-            templateUrl: 'AngularJS/Templates/unidadesNuevas.html', //example 1
+            templateUrl: 'AngularJS/Pages/unidadesNuevas/unidadesNuevas.html', //example 1
         //     params: {
         //     mostrar: true
         // }
